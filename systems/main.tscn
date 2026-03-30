@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cvax2s15b8hxk" path="res://entities/player/player.tscn" id="1_fer86"]
 [ext_resource type="Script" uid="uid://dgfpaey88h0x8" path="res://systems/main.gd" id="1_lmkcu"]
 [ext_resource type="Texture2D" uid="uid://bm8j38a0y3o8w" path="res://entities/bg/bg_dust.png" id="2_5sqq3"]
+[ext_resource type="Shader" uid="uid://dln5gf0phd52t" path="res://entities/bg/foam.gdshader" id="2_lmkcu"]
 [ext_resource type="PackedScene" uid="uid://dxoava8ishrr6" path="res://entities/ship/ship.tscn" id="6_5sqq3"]
 [ext_resource type="Script" uid="uid://d2ff2h1utffla" path="res://entities/player/player_tracker_camera.gd" id="8_8jvf7"]
 [ext_resource type="Script" uid="uid://txvchgs5dt3n" path="res://entities/ship/radar_mark.gd" id="9_yehfd"]
@@ -32,8 +33,8 @@ seamless_blend_skirt = 0.069
 [sub_resource type="Gradient" id="Gradient_ufupk"]
 interpolation_mode = 2
 interpolation_color_space = 2
-offsets = PackedFloat32Array(0, 0.72321427, 0.7380952, 1)
-colors = PackedColorArray(0, 0.2151795, 0.18699077, 0, 0, 0.5767922, 0.5108751, 0.41960785, 0.8456017, 0.9254286, 0.9076761, 0.89499223, 1, 1, 1, 1)
+offsets = PackedFloat32Array(0, 0.72321427, 0.736, 1)
+colors = PackedColorArray(0, 0.2151795, 0.18699077, 0, 0, 0.5767922, 0.5108751, 0.41960785, -0.001835418, 0.6479356, 0.7175868, 0.96426487, 0, 0.65077513, 0.730158, 1)
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_5sqq3"]
 noise_type = 0
@@ -49,6 +50,27 @@ noise = SubResource("FastNoiseLite_5sqq3")
 color_ramp = SubResource("Gradient_ufupk")
 seamless = true
 seamless_blend_skirt = 0.148
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8jvf7"]
+width = 1152
+height = 648
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_5sqq3")
+seamless = true
+seamless_blend_skirt = 0.148
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8jvf7"]
+shader = ExtResource("2_lmkcu")
+shader_parameter/foam_tex = SubResource("NoiseTexture2D_8jvf7")
+
+[sub_resource type="Gradient" id="Gradient_8jvf7"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_yehfd"]
+gradient = SubResource("Gradient_8jvf7")
+width = 1152
+height = 648
 
 [node name="Main" type="Node2D" unique_id=768469602]
 script = ExtResource("1_lmkcu")
@@ -85,6 +107,11 @@ repeat_size = Vector2(1152, 648)
 [node name="Sprite2D2" type="Sprite2D" parent="OceanBG/Waves" unique_id=660745266]
 position = Vector2(144, 81)
 texture = SubResource("NoiseTexture2D_lmkcu")
+
+[node name="Sprite2D4" type="Sprite2D" parent="OceanBG/Waves" unique_id=1857832814]
+material = SubResource("ShaderMaterial_8jvf7")
+position = Vector2(144, 81)
+texture = SubResource("GradientTexture2D_yehfd")
 
 [node name="Sprite2D3" type="Sprite2D" parent="OceanBG/Waves" unique_id=386604835]
 visible = false
