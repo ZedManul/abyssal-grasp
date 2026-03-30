@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://bi6mww7tm2m1e"]
+
+[ext_resource type="Script" uid="uid://cv5kjobfudqot" path="res://entities/ship/ship_transition.gd" id="1_cp6bn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_346up"]
+radius = 11.313708
+
+[node name="ShipInternals" type="Node2D" unique_id=1268616418]
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1726665332]
+position = Vector2(192, 80)
+color = Color(0.52652824, 0.52652824, 0.52652824, 1)
+polygon = PackedVector2Array(-64, -56, 32, -56, 72, -16, 72, 16, 32, 56, -64, 56, -96, 24, -160, 24, -160, -24, -96, -24)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=617498147]
+position = Vector2(144, 80)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1650290837]
+position = Vector2(144, 80)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D" unique_id=429374280]
+polygon = PackedVector2Array(-112, -24, -48, -24, -16, -56, 80, -56, 120, -16, 120, 16, 80, 56, -16, 56, -48, 24, -112, 24, -144, 80, 144, 80, 144, -80, -144, -80, -144, 80, -112, 24)
+
+[node name="ShipEntryPoint" type="Marker2D" parent="." unique_id=1712280796]
+position = Vector2(144, 128)
+
+[node name="ShipExit" type="Area2D" parent="." unique_id=1186829253]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_cp6bn")
+metadata/_custom_type_script = "uid://cv5kjobfudqot"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShipExit" unique_id=1913634815]
+position = Vector2(144, 136)
+shape = SubResource("CircleShape2D_346up")

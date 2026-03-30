@@ -1,0 +1,261 @@
+[gd_scene format=3 uid="uid://dxoava8ishrr6"]
+
+[ext_resource type="Script" uid="uid://cwe8mm0ubgd8o" path="res://entities/ship/ship.gd" id="1_805ym"]
+[ext_resource type="Script" uid="uid://txvchgs5dt3n" path="res://entities/ship/radar_mark.gd" id="2_3ywi2"]
+[ext_resource type="Script" uid="uid://duub7ik6mbd8x" path="res://systems/interactable.gd" id="2_53e7a"]
+[ext_resource type="Script" uid="uid://cv5kjobfudqot" path="res://entities/ship/ship_transition.gd" id="2_alltn"]
+[ext_resource type="Script" uid="uid://cqw7bwhj6msuo" path="res://entities/player/velocity_display.gd" id="3_alltn"]
+[ext_resource type="Script" uid="uid://tshgylym3ajl" path="res://entities/ship/ship_subworld.gd" id="3_u0oul"]
+[ext_resource type="Texture2D" uid="uid://mp6chqdsg5rb" path="res://entities/ship/ship_panel_ui.png" id="5_3if2u"]
+[ext_resource type="Shader" uid="uid://lwwk7lfx27h7" path="res://systems/pixel_filtering.gdshader" id="5_tua1r"]
+[ext_resource type="Script" uid="uid://b7bot1upoig83" path="res://entities/ship/radar_display.gd" id="9_1h6wo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tivcy"]
+radius = 11.313708
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_53e7a"]
+radius = 16.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_53e7a"]
+shader = ExtResource("5_tua1r")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ywi2"]
+shader = ExtResource("5_tua1r")
+
+[node name="ShipBody" type="RigidBody2D" unique_id=1086195184 node_paths=PackedStringArray("helm_pilot_position")]
+mass = 1000.0
+gravity_scale = 0.0
+can_sleep = false
+script = ExtResource("1_805ym")
+helm_pilot_position = NodePath("SubViewportContainer/ShipWorld/ShipInternals/ShipHelm")
+
+[node name="ShipMark" type="Polygon2D" parent="." unique_id=969961346]
+color = Color(0, 0.7529412, 0.40392157, 1)
+polygon = PackedVector2Array(-5, -5, 4, 0, -5, 5, -3, 0)
+script = ExtResource("2_3ywi2")
+directional = true
+
+[node name="ShipExternals" type="Polygon2D" parent="." unique_id=18069787]
+position = Vector2(48, 0)
+color = Color(0.8329021, 0.83290213, 0.83290213, 1)
+polygon = PackedVector2Array(48, -64, 96, -16, 96, 16, 48, 64, -208, 64, -208, -64)
+
+[node name="ShipCollider" type="CollisionPolygon2D" parent="." unique_id=1830514036]
+position = Vector2(48, 0)
+polygon = PackedVector2Array(48, -64, 96, -16, 96, 16, 48, 64, -208, 64, -208, -64)
+
+[node name="ShipEntrance" type="Area2D" parent="." unique_id=1613278264]
+position = Vector2(-128, 72)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("2_53e7a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShipEntrance" unique_id=1003785443]
+shape = SubResource("CircleShape2D_tivcy")
+
+[node name="ShipEntrance" type="Node" parent="ShipEntrance" unique_id=2016029318 node_paths=PackedStringArray("destination_reference", "destination_exit", "velocity_reference")]
+script = ExtResource("2_alltn")
+destination_reference = NodePath("../../SubViewportContainer/ShipWorld/ShipInternals")
+destination_exit = NodePath("../../SubViewportContainer/ShipWorld/ShipInternals/ShipExit/ShipEntryPoint")
+velocity_reference = NodePath("../..")
+metadata/_custom_type_script = "uid://cv5kjobfudqot"
+
+[node name="ShipExitPoint" type="Marker2D" parent="ShipEntrance" unique_id=337032441]
+
+[node name="VelocityDisplay" type="Line2D" parent="." unique_id=1253937034 node_paths=PackedStringArray("body")]
+visible = false
+width = 4.0
+script = ExtResource("3_alltn")
+body = NodePath("..")
+gizmo_scale = 0.2
+metadata/_custom_type_script = "uid://cqw7bwhj6msuo"
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier2D" parent="." unique_id=1184081368]
+position = Vector2(-152, -80)
+rect = Rect2(-16, -16, 320, 192)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=56122078 node_paths=PackedStringArray("world_transform_anchor", "sub_world_camera", "sub_world_vp")]
+offset_left = -152.0
+offset_top = -80.0
+offset_right = 2152.0
+offset_bottom = 1216.0
+scale = Vector2(0.125, 0.125)
+stretch = true
+mouse_target = true
+script = ExtResource("3_u0oul")
+world_transform_anchor = NodePath("../VisibilityNotifier")
+sub_world_camera = NodePath("ShipWorld/SubWorldCam")
+sub_world_vp = NodePath("ShipWorld")
+
+[node name="ShipWorld" type="SubViewport" parent="SubViewportContainer" unique_id=593738225]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+gui_snap_controls_to_pixels = false
+size = Vector2i(2304, 1296)
+size_2d_override = Vector2i(288, 162)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="ShipInternals" type="Node2D" parent="SubViewportContainer/ShipWorld" unique_id=1268616418]
+
+[node name="Polygon2D" type="Polygon2D" parent="SubViewportContainer/ShipWorld/ShipInternals" unique_id=1726665332]
+position = Vector2(192, 80)
+color = Color(0.52652824, 0.52652824, 0.52652824, 1)
+polygon = PackedVector2Array(56, -56, 96, -16, 96, 16, 56, 56, -192, 56, -192, -56)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="SubViewportContainer/ShipWorld/ShipInternals" unique_id=1650290837]
+position = Vector2(144, 80)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SubViewportContainer/ShipWorld/ShipInternals/StaticBody2D" unique_id=429374280]
+build_mode = 1
+polygon = PackedVector2Array(-144, -56, 104, -56, 144, -16, 144, 16, 104, 56, -144, 56)
+
+[node name="ShipExit" type="Area2D" parent="SubViewportContainer/ShipWorld/ShipInternals" unique_id=2136291851]
+position = Vector2(24, 128)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("2_53e7a")
+metadata/_custom_type_script = "uid://duub7ik6mbd8x"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipExit" unique_id=1765632432]
+shape = SubResource("CircleShape2D_tivcy")
+
+[node name="ShipExit" type="Node" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipExit" unique_id=1130799206 node_paths=PackedStringArray("destination_exit", "velocity_reference")]
+script = ExtResource("2_alltn")
+destination_exit = NodePath("../../../../../ShipEntrance/ShipExitPoint")
+velocity_reference = NodePath("../../../../..")
+metadata/_custom_type_script = "uid://cv5kjobfudqot"
+
+[node name="ShipEntryPoint" type="Marker2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipExit" unique_id=1712280796]
+
+[node name="ShipHelm" type="Node2D" parent="SubViewportContainer/ShipWorld/ShipInternals" unique_id=1447346547]
+position = Vector2(78, 80)
+
+[node name="Polygon2D" type="Polygon2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipHelm" unique_id=1488572135]
+color = Color(0.76950634, 0.7111277, 0.9821752, 1)
+polygon = PackedVector2Array(8, -8, 8, 8, 0, 16, 8, 24, 24, 8, 24, -8, 8, -24, 0, -16)
+
+[node name="HelmInteractible" type="Area2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipHelm" unique_id=1623212994]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_53e7a")
+metadata/_custom_type_script = "uid://duub7ik6mbd8x"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipHelm/HelmInteractible" unique_id=529153268]
+shape = SubResource("CircleShape2D_53e7a")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipHelm" unique_id=516634960]
+position = Vector2(16, 0)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="SubViewportContainer/ShipWorld/ShipInternals/ShipHelm/StaticBody2D" unique_id=1446149054]
+position = Vector2(-248, -80)
+polygon = PackedVector2Array(232, 64, 240, 56, 256, 72, 256, 88, 240, 104, 232, 96, 240, 88, 240, 72)
+
+[node name="SubWorldCam" type="Camera2D" parent="SubViewportContainer/ShipWorld" unique_id=2120762103]
+ignore_rotation = false
+
+[node name="HelmUI" type="CanvasLayer" parent="." unique_id=1284742743]
+unique_name_in_owner = true
+visible = false
+
+[node name="RadarScreen" type="NinePatchRect" parent="HelmUI" unique_id=1550787397]
+material = SubResource("ShaderMaterial_53e7a")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 16.0
+offset_right = -80.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_3if2u")
+region_rect = Rect2(1, 1, 12, 12)
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HelmUI/RadarScreen" unique_id=1371169521]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 125.0
+offset_bottom = 129.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 8
+
+[node name="RadarViewPortContainer" type="SubViewportContainer" parent="HelmUI/RadarScreen/MarginContainer" unique_id=509970586]
+material = SubResource("ShaderMaterial_3ywi2")
+layout_mode = 2
+
+[node name="RadarSubViewPort" type="SubViewport" parent="HelmUI/RadarScreen/MarginContainer/RadarViewPortContainer" unique_id=256812660]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(244, 240)
+render_target_update_mode = 0
+
+[node name="RadarDisplay" type="Node2D" parent="HelmUI/RadarScreen/MarginContainer/RadarViewPortContainer/RadarSubViewPort" unique_id=455360498 node_paths=PackedStringArray("world_anchor")]
+script = ExtResource("9_1h6wo")
+world_anchor = NodePath("../../../../../../ShipMark")
+inherit_world_anchor_rotation = false
+
+[node name="MainControlPanel" type="NinePatchRect" parent="HelmUI" unique_id=1024640692]
+material = SubResource("ShaderMaterial_53e7a")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -216.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_3if2u")
+region_rect = Rect2(1, 15, 12, 12)
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="SecondaryControlPanel" type="NinePatchRect" parent="HelmUI" unique_id=1098236995]
+material = SubResource("ShaderMaterial_53e7a")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 216.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_3if2u")
+region_rect = Rect2(1, 15, 12, 12)
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[connection signal="interaction" from="ShipEntrance" to="ShipEntrance/ShipEntrance" method="activate"]
+[connection signal="interaction" from="SubViewportContainer/ShipWorld/ShipInternals/ShipExit" to="SubViewportContainer/ShipWorld/ShipInternals/ShipExit/ShipExit" method="activate"]
+[connection signal="interaction" from="SubViewportContainer/ShipWorld/ShipInternals/ShipHelm/HelmInteractible" to="." method="_on_helm_interacted"]

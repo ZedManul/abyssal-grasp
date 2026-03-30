@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://bgwe8f0d0c8qt"]
+
+[ext_resource type="PackedScene" uid="uid://cvax2s15b8hxk" path="res://entities/player/player.tscn" id="1_fer86"]
+[ext_resource type="Script" uid="uid://dgfpaey88h0x8" path="res://systems/main.gd" id="1_lmkcu"]
+[ext_resource type="Texture2D" uid="uid://bm8j38a0y3o8w" path="res://entities/bg/bg_dust.png" id="2_5sqq3"]
+[ext_resource type="PackedScene" uid="uid://dxoava8ishrr6" path="res://entities/ship/ship.tscn" id="6_5sqq3"]
+[ext_resource type="Script" uid="uid://d2ff2h1utffla" path="res://entities/player/player_tracker_camera.gd" id="8_8jvf7"]
+[ext_resource type="Script" uid="uid://txvchgs5dt3n" path="res://entities/ship/radar_mark.gd" id="9_yehfd"]
+
+[sub_resource type="Gradient" id="Gradient_lmkcu"]
+interpolation_mode = 2
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0.38448277, 1)
+colors = PackedColorArray(0.19143024, 0.445615, 0.51652795, 1, 0.16927174, 0.40364563, 0.46891254, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8jvf7"]
+noise_type = 0
+seed = 99
+fractal_type = 2
+domain_warp_type = 1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_yehfd"]
+width = 1152
+height = 648
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_8jvf7")
+color_ramp = SubResource("Gradient_lmkcu")
+seamless = true
+in_3d_space = true
+seamless_blend_skirt = 0.069
+
+[sub_resource type="Gradient" id="Gradient_ufupk"]
+interpolation_mode = 2
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.72321427, 0.7380952, 1)
+colors = PackedColorArray(0, 0.2151795, 0.18699077, 0, 0, 0.5767922, 0.5108751, 0.41960785, 0.8456017, 0.9254286, 0.9076761, 0.89499223, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5sqq3"]
+noise_type = 0
+fractal_type = 2
+domain_warp_type = 1
+metadata/_preview_in_3d_space_ = true
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lmkcu"]
+width = 1152
+height = 648
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_5sqq3")
+color_ramp = SubResource("Gradient_ufupk")
+seamless = true
+seamless_blend_skirt = 0.148
+
+[node name="Main" type="Node2D" unique_id=768469602]
+script = ExtResource("1_lmkcu")
+
+[node name="OceanBG" type="Node2D" parent="." unique_id=626057159]
+visibility_layer = 524288
+z_index = -1024
+
+[node name="BG" type="Parallax2D" parent="OceanBG" unique_id=388190838]
+visible = false
+scroll_scale = Vector2(0, 0)
+repeat_size = Vector2(288, 162)
+repeat_times = 2
+
+[node name="ColorRect" type="ColorRect" parent="OceanBG/BG" unique_id=1488550283]
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 293.0
+offset_bottom = 168.0
+color = Color(0, 0.27681398, 0.33558834, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Depth" type="Parallax2D" parent="OceanBG" unique_id=744517205]
+scroll_scale = Vector2(0.1, 0.1)
+repeat_size = Vector2(1152, 648)
+
+[node name="Sprite2D2" type="Sprite2D" parent="OceanBG/Depth" unique_id=1476410440]
+position = Vector2(144, 81)
+texture = SubResource("NoiseTexture2D_yehfd")
+
+[node name="Waves" type="Parallax2D" parent="OceanBG" unique_id=193778525]
+repeat_size = Vector2(1152, 648)
+
+[node name="Sprite2D2" type="Sprite2D" parent="OceanBG/Waves" unique_id=660745266]
+position = Vector2(144, 81)
+texture = SubResource("NoiseTexture2D_lmkcu")
+
+[node name="Sprite2D3" type="Sprite2D" parent="OceanBG/Waves" unique_id=386604835]
+visible = false
+position = Vector2(288, 162)
+texture = ExtResource("2_5sqq3")
+
+[node name="Ship" parent="." unique_id=1086195184 instance=ExtResource("6_5sqq3")]
+position = Vector2(164, 46)
+
+[node name="Player" parent="." unique_id=1256031120 instance=ExtResource("1_fer86")]
+
+[node name="MainCam" type="Camera2D" parent="." unique_id=736831625]
+position = Vector2(164, 46)
+process_callback = 0
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+script = ExtResource("8_8jvf7")
+
+[node name="TestMark" type="Polygon2D" parent="." unique_id=696621576]
+position = Vector2(69, 141)
+color = Color(0, 0.7529412, 0.40392157, 1)
+polygon = PackedVector2Array(-11, -5, 0, 0, 18, 2, -12, 9)
+script = ExtResource("9_yehfd")
+directional = true
+
+[node name="TestMark2" type="Polygon2D" parent="." unique_id=199876011]
+position = Vector2(427, 225)
+color = Color(0, 0.7529412, 0.40392157, 1)
+polygon = PackedVector2Array(-5, -5, 0, 0, -5, 5, -10, 0)
+script = ExtResource("9_yehfd")
