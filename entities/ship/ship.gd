@@ -34,5 +34,5 @@ func process_helm_input(delta: float) -> void:
 		Input.get_axis("move_left","move_right")
 		).normalized()
 	apply_central_impulse(Vector2.from_angle(global_rotation)*motion_input.x * 1000.0 )
-	apply_torque_impulse(motion_input.y * abs(motion_input.x) * 30000.0)
+	apply_torque_impulse(motion_input.y * (motion_input.x) * 40000.0)
 	
